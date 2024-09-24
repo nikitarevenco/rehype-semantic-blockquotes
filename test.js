@@ -7,26 +7,26 @@ import assert from "node:assert";
 const tests = [
   [
     "Will do nothing if there is no linebreak between the credit and the content",
-    `> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
-> @ Albert Einstein
+    `> Better to admit you walked through the wrong door than spend your life in the wrong room.
+> @ Josh Davis
 `,
-    `> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
-> @ Albert Einstein
+    `> Better to admit you walked through the wrong door than spend your life in the wrong room.
+> @ Josh Davis
 `,
   ],
   [
     "Will not transform markdown link",
-    `> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+    `> Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
-> @ [Albert Einstein](hahahaa)
+> @ [Josh Davis](https://somewhere.com)
 `,
     `
 <figure data-blockquote-figure="">
   <blockquote data-blockquote-content="">
-    Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+    Better to admit you walked through the wrong door than spend your life in the wrong room.
   </blockquote>
   <figcaption data-blockquote-figcaption="">
-    [Albert Einstein](hahahaa)
+    [Josh Davis](https://somewhere.com)
   </figcaption>
 </figure>
 `,
@@ -34,17 +34,17 @@ const tests = [
   [
     "Will not transform complicated markdown syntax with several nodes",
     `
-> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+> Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
-> @ Credit: [Albert Einstein](https://www.goodreads.com/author/quotes/9810.Albert_Einstein), we obtained the quotes at **some website**
+> @ Credit: [Josh Davis](https://www.somewhere.com), we obtained the quote at **some website**
 `,
     `
 <figure data-blockquote-figure="">
   <blockquote data-blockquote-content="">
-    Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+    Better to admit you walked through the wrong door than spend your life in the wrong room.
   </blockquote>
   <figcaption data-blockquote-figcaption="">
-    Credit: [Albert Einstein](https://www.goodreads.com/author/quotes/9810.Albert_Einstein), we obtained the quotes at **some website**
+    Credit: [Josh Davis](https://www.somewhere.com), we obtained the quote at **some website**
   </figcaption>
 </figure>
 `,

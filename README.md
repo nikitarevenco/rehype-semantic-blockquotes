@@ -1,3 +1,17 @@
+# Remark Semantic Blockquotes
+
+### TLDR
+
+Extends markdown blockquote syntax to allow for mention of author or origin
+
+Transforms the following:
+
+
+
+Into this:
+
+### Explanation
+
 In markdown we can create blockquotes such as:
 
 ```md
