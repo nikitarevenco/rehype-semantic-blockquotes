@@ -2,32 +2,85 @@ import remarkParse from "remark-parse";
 import { visit } from "unist-util-visit";
 import { remark } from "remark";
 
-const doc = `
-> hello, world!
-> @me
+const tests = [
+  [
+    `
+> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+> @ Albert Einstein
+`,
+    `
+> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+> @ Albert Einstein
+`,
+  ],
+  [
+    `
+> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+>
+> @ Albert Einstein
+`,
+    `
+<figure data-blockquote-figure="">
+  <blockquote data-blockquote-content="">
+    <p>Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.<p>
+  </blockquote>
+  <figcaption data-blockquote-figcaption="">
+    <p>Albert Einstein<p>
+  </figcaption>
+</figure>
+`,
+  ],
+  [
+    `
+> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
+>
+> @ Credit: [Albert Einstein](https://www.goodreads.com/author/quotes/9810.Albert_Einstein), we obtained the quotes at **some website**
+`,
+    `
+<figure data-blockquote-figure="">
+  <blockquote data-blockquote-content="">
+    <p>Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.<p>
+  </blockquote>
+  <figcaption data-blockquote-figcaption="">
+    <p>Credit: <a href="https://www.goodreads.com/author/quotes/9810.Albert_Einstein">Albert Einstein</a>, we obtained the quotes at <strong>some website</strong></p>
+  </figcaption>
+</figure>
+`,
+  ],
+];
 
-> yet, again!
-> @another
-
-> this time, yes!
-> 
-> @ok
+/**
+ * Wraps some content and a caption inside of a HTML figure
+ * @param {string} content
+ * @param {string} caption
+ */
+const wrapWithHtml = (content, caption) => {
+  return `
+<figure data-blockquote-figure="">
+  <blockquote data-blockquote-content="">
+    ${content}
+  </blockquote>
+  <figcaption data-blockquote-figcaption="">
+    ${caption}
+  </figcaption>
+</figure>
 `;
+};
 
 await remark()
   .use(remarkParse)
   .use((opts) => {
     return (tree, _file) => {
-      visit(tree, "blockquote", (node) => {
-        const lastChild = node.children.at(-1);
-        visit(lastChild, "text", (node) => {
-          if (node.value.startsWith("@")) {
-            console.log("yes!");
-          }
-        });
+      visit(tree, "blockquote", (blockquote) => {
+      console.log(blockquote)
+        // would not make sense to transform if there is only 1 child
+        if (blockquote.children.length >= 2) {
+          const lastChild = blockquote.children.at(-1);
+          console.log(lastChild);
+        }
       });
     };
   })
-  .process(doc);
+  .process(tests[1][0]);
 
 // console.error(String(file));
