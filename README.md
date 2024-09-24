@@ -6,9 +6,36 @@ Extends markdown blockquote syntax to allow for mention of author or origin
 
 Transforms the following:
 
-
+```md
+> Better to admit you walked through the wrong door than spend your life in the wrong room.
+>
+> @ [Josh Davis](https://somewhere.com)
+```
 
 Into this:
+
+```md
+<figure data-blockquote-figure="">
+  <blockquote data-blockquote-content="">
+    Better to admit you walked through the wrong door than spend your life in the wrong room.
+  </blockquote>
+  <figcaption data-blockquote-figcaption="">
+    [Josh Davis](https://somewhere.com)
+  </figcaption>
+</figure>
+```
+
+See more examples in [test.js](./test.js)
+
+The attributes (`data-blockquote-figure`, etc.) are fully customizable. The plugin takes a parameter, `opts` with the following default config:
+
+```js
+{
+  figure: 'data-blockquote-figure=""',
+  blockquote: 'data-blockquote-content=""',
+  figcaption: 'data-blockquote-figcaption=""',
+};
+```
 
 ### Explanation
 
