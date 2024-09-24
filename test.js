@@ -69,32 +69,32 @@ than spend your life in the wrong room.
 </figure>
 `,
   ],
-//   [
-//     "Will transform a blockquote with a nested list in the content",
-//     `
-// > Here are some steps:
-// >
-// > 1. Do this
-// > 2. Then do that
-// > 3. Finally, do the other thing
-// >
-// > @ Jane Doe
-// `,
-//     `
-// <figure data-blockquote-figure="">
-//   <blockquote data-blockquote-content="">
-//     Here are some steps:
-//
-//     1. Do this
-//     2. Then do that
-//     3. Finally, do the other thing
-//   </blockquote>
-//   <figcaption data-blockquote-figcaption="">
-//     Jane Doe
-//   </figcaption>
-// </figure>
-// `,
-//   ],
+  [
+    "Will transform a blockquote with a nested list in the content",
+    `
+> Here are some steps:
+>
+> 1. Do this
+> 2. Then do that
+> 3. Finally, do the other thing
+>
+> @ Jane Doe
+`,
+    `
+<figure data-blockquote-figure="">
+  <blockquote data-blockquote-content="">
+    Here are some steps:
+
+1. Do this
+2. Then do that
+3. Finally, do the other thing
+  </blockquote>
+  <figcaption data-blockquote-figcaption="">
+    Jane Doe
+  </figcaption>
+</figure>
+`,
+  ],
   [
     "Will transform a blockquote with inline code in the content",
     `
@@ -115,7 +115,7 @@ than spend your life in the wrong room.
   ],
 ];
 
-tests.forEach(async ([message, input, expected]) => {
+tests.forEach(async ([message, input, expected], index) => {
   const file = await remark()
     .use(remarkParse)
     .use(remarkSemanticBlockquote)

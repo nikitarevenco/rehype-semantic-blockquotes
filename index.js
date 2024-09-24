@@ -17,16 +17,6 @@ const wrapWithHtml = (content, caption, opts) => {
 `;
 };
 
-/**
- * Convert list of markdown nodes to a single markdown file
- */
-const mdAstListToMd = (mdAst) =>
-  mdAst.reduce((mdFile, node) => {
-    const asMarkdown = toMarkdown(node);
-    const withoutNewlines = asMarkdown.slice(0, -1);
-    return mdFile.concat(withoutNewlines);
-  }, "");
-
 const checkLastChild = (caption) => {
   if (caption[0].value.startsWith("@ ")) {
     caption[0].value = caption[0].value.slice(2);
@@ -51,8 +41,11 @@ const parse = (blockquote, opts) => {
 
     checkLastChild(caption);
 
-    const contentMd = mdAstListToMd(content);
-    const captionMd = mdAstListToMd(caption);
+    // toMarkdown does not support arrays, so we havo use this approach
+    // Also, toMarkdown adds a newline at the end of its output, which we remove with slice
+    const [contentMd, captionMd] = [content, caption].map((ast) =>
+      toMarkdown({ type: "root", children: ast }).slice(0, -1),
+    );
     const html = wrapWithHtml(contentMd, captionMd, opts);
 
     // replace markdown syntax with the modified HTML
