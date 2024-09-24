@@ -17,12 +17,24 @@ const wrapWithHtml = (content, caption, opts) => {
 `;
 };
 
+/**
+ * Convert list of markdown nodes to a single markdown file
+ */
 const mdAstListToMd = (mdAst) =>
   mdAst.reduce((mdFile, node) => {
     const asMarkdown = toMarkdown(node);
     const withoutNewlines = asMarkdown.slice(0, -1);
     return mdFile.concat(withoutNewlines);
   }, "");
+
+const checkLastChild = (caption) => {
+  if (caption[0].value.startsWith("@ ")) {
+    caption[0].value = caption[0].value.slice(2);
+  }
+  if (caption.value === "") {
+    caption.shift();
+  }
+};
 
 /**
  * Extends markdown syntax of blockquotes, making them more semantic by using figure and figcaption elements when giving credit
@@ -45,15 +57,14 @@ const remarkSemanticBlockquote = (
         }
         const content = blockquote.children.slice(0, -1);
         const caption = lastChild.children;
-        if (caption[0].value.startsWith("@ ")) {
-          caption[0].value = caption[0].value.slice(2);
-        }
-        if (caption[0].value === "") {
-          caption.shift();
-        }
+
+        checkLastChild(caption);
+
         const contentMd = mdAstListToMd(content);
         const captionMd = mdAstListToMd(caption);
         const html = wrapWithHtml(contentMd, captionMd, opts);
+
+        // replace markdown syntax with the modified HTML
         blockquote.type = "html";
         blockquote.children = undefined;
         blockquote.value = html;
