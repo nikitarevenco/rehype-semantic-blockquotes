@@ -17,7 +17,7 @@ const tests = [
     `
 > Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
 >
-> @ Albert Einstein
+> @ [Albert Einstein](hahahaa)
 `,
     `
 <figure data-blockquote-figure="">
@@ -67,20 +67,27 @@ const wrapWithHtml = (content, caption) => {
 `;
 };
 
-await remark()
+const file = await remark()
   .use(remarkParse)
   .use((opts) => {
     return (tree, _file) => {
       visit(tree, "blockquote", (blockquote) => {
-      console.log(blockquote)
         // would not make sense to transform if there is only 1 child
         if (blockquote.children.length >= 2) {
           const lastChild = blockquote.children.at(-1);
-          console.log(lastChild);
+          if (lastChild.type !== "paragraph") {
+            throw new Error("Expected paragraph, but got:", lastChild.type);
+          }
+          const content = blockquote.children.slice(0, -1);
+          const caption = lastChild.children;
+          if (caption[0].value.startsWith("@ ")) {
+            caption[0].value = caption[0].value.slice(2);
+          }
+          console.log(content, caption);
         }
       });
     };
   })
-  .process(tests[1][0]);
+  .process(tests[0][0]);
 
-// console.error(String(file));
+console.error(String(file));
