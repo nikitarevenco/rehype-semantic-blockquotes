@@ -5,21 +5,29 @@ import { remark } from "remark";
 const doc = `
 > hello, world!
 > @me
+
+> yet, again!
+> @another
+
+> this time, yes!
+> 
+> @ok
 `;
 
-const file = await remark()
+await remark()
   .use(remarkParse)
-  .use(
-    (opts) => {
-      console.log(opts);
-      return (tree, _file) => {
-        visit(tree, "text", (node) => {
-          console.log(node);
+  .use((opts) => {
+    return (tree, _file) => {
+      visit(tree, "blockquote", (node) => {
+        const lastChild = node.children.at(-1);
+        visit(lastChild, "text", (node) => {
+          if (node.value.startsWith("@")) {
+            console.log("yes!");
+          }
         });
-      };
-    },
-    { lol: "lol" },
-  )
+      });
+    };
+  })
   .process(doc);
 
-console.error(String(file));
+// console.error(String(file));
