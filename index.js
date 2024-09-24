@@ -1,68 +1,16 @@
-import remarkParse from "remark-parse";
-import remarkStringify from "remark-stringify";
 import { toMarkdown } from "mdast-util-to-markdown";
 import { visit } from "unist-util-visit";
-import { remark } from "remark";
-
-const tests = [
-  [
-    `
-> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
-> @ Albert Einstein
-`,
-    `
-> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
-> @ Albert Einstein
-`,
-  ],
-  [
-    `
-> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
->
-> @ [Albert Einstein](hahahaa)
-`,
-    `
-<figure data-blockquote-figure="">
-  <blockquote data-blockquote-content="">
-    <p>Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.<p>
-  </blockquote>
-  <figcaption data-blockquote-figcaption="">
-    <p>Albert Einstein<p>
-  </figcaption>
-</figure>
-`,
-  ],
-  [
-    `
-> Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.
->
-> @ Credit: [Albert Einstein](https://www.goodreads.com/author/quotes/9810.Albert_Einstein), we obtained the quotes at **some website**
-`,
-    `
-<figure data-blockquote-figure="">
-  <blockquote data-blockquote-content="">
-    <p>Two things are infinite: the universe and human stupidity; and I'm not sure about the universe.<p>
-  </blockquote>
-  <figcaption data-blockquote-figcaption="">
-    <p>Credit: <a href="https://www.goodreads.com/author/quotes/9810.Albert_Einstein">Albert Einstein</a>, we obtained the quotes at <strong>some website</strong></p>
-  </figcaption>
-</figure>
-`,
-  ],
-];
 
 /**
  * Wraps some content and a caption inside of a HTML figure
- * @param {string} content
- * @param {string} caption
  */
-const wrapWithHtml = (content, caption) => {
+const wrapWithHtml = (content, caption, opts) => {
   return `
-<figure data-blockquote-figure="">
-  <blockquote data-blockquote-content="">
+<figure ${opts.figure}>
+  <blockquote ${opts.blockquote}>
     ${content}
   </blockquote>
-  <figcaption data-blockquote-figcaption="">
+  <figcaption ${opts.figcaption}>
     ${caption}
   </figcaption>
 </figure>
@@ -76,35 +24,42 @@ const mdAstListToMd = (mdAst) =>
     return mdFile.concat(withoutNewlines);
   }, "");
 
-const file = await remark()
-  .use(remarkParse)
-  .use((opts) => {
-    return (tree, _file) => {
-      visit(tree, "blockquote", (blockquote) => {
-        // would not make sense to transform if there is only 1 child
-        if (blockquote.children.length >= 2) {
-          const lastChild = blockquote.children.at(-1);
-          if (lastChild.type !== "paragraph") {
-            throw new Error("Expected paragraph, but got:", lastChild.type);
-          }
-          const content = blockquote.children.slice(0, -1);
-          const caption = lastChild.children;
-          if (caption[0].value.startsWith("@ ")) {
-            caption[0].value = caption[0].value.slice(2);
-          }
-          if (caption[0].value === "") {
-            caption.shift();
-          }
-          const contentMd = mdAstListToMd(content);
-          const captionMd = mdAstListToMd(caption);
-          const html = wrapWithHtml(contentMd, captionMd);
-          blockquote.type = "html";
-          blockquote.children = undefined;
-          blockquote.value = html;
+/**
+ * Extends markdown syntax of blockquotes, making them more semantic by using figure and figcaption elements when giving credit
+ * @param {{ figure: string, blockquote: string, figcaption: string }} opts Change the default attributes passed to the <figure>, <blockquote> and <figcaption> elements
+ */
+const remarkSemanticBlockquote = (
+  opts = {
+    figure: 'data-blockquote-figure=""',
+    blockquote: 'data-blockquote-content=""',
+    figcaption: 'data-blockquote-figcaption=""',
+  },
+) => {
+  return (tree) => {
+    visit(tree, "blockquote", (blockquote) => {
+      // would not make sense to transform if there is only 1 child
+      if (blockquote.children.length >= 2) {
+        const lastChild = blockquote.children.at(-1);
+        if (lastChild.type !== "paragraph") {
+          throw new Error("Expected paragraph, but got:", lastChild.type);
         }
-      });
-    };
-  })
-  .process(tests[2][0]);
+        const content = blockquote.children.slice(0, -1);
+        const caption = lastChild.children;
+        if (caption[0].value.startsWith("@ ")) {
+          caption[0].value = caption[0].value.slice(2);
+        }
+        if (caption[0].value === "") {
+          caption.shift();
+        }
+        const contentMd = mdAstListToMd(content);
+        const captionMd = mdAstListToMd(caption);
+        const html = wrapWithHtml(contentMd, captionMd, opts);
+        blockquote.type = "html";
+        blockquote.children = undefined;
+        blockquote.value = html;
+      }
+    });
+  };
+};
 
-console.error(String(file));
+export default remarkSemanticBlockquote;
