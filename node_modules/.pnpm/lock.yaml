@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      mdast-util-to-markdown:
+        specifier: ^2.1.0
+        version: 2.1.0
       remark:
         specifier: ^15.0.1
         version: 15.0.1

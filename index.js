@@ -1,4 +1,6 @@
 import remarkParse from "remark-parse";
+import remarkStringify from "remark-stringify";
+import { toMarkdown } from "mdast-util-to-markdown";
 import { visit } from "unist-util-visit";
 import { remark } from "remark";
 
@@ -67,6 +69,13 @@ const wrapWithHtml = (content, caption) => {
 `;
 };
 
+const mdAstListToMd = (mdAst) =>
+  mdAst.reduce((mdFile, node) => {
+    const asMarkdown = toMarkdown(node);
+    const withoutNewlines = asMarkdown.slice(0, -1);
+    return mdFile.concat(withoutNewlines);
+  }, "");
+
 const file = await remark()
   .use(remarkParse)
   .use((opts) => {
@@ -83,11 +92,19 @@ const file = await remark()
           if (caption[0].value.startsWith("@ ")) {
             caption[0].value = caption[0].value.slice(2);
           }
-          console.log(content, caption);
+          if (caption[0].value === "") {
+            caption.shift();
+          }
+          const contentMd = mdAstListToMd(content);
+          const captionMd = mdAstListToMd(caption);
+          const html = wrapWithHtml(contentMd, captionMd);
+          blockquote.type = "html";
+          blockquote.children = undefined;
+          blockquote.value = html;
         }
       });
     };
   })
-  .process(tests[0][0]);
+  .process(tests[2][0]);
 
 console.error(String(file));
