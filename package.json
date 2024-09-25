@@ -1,5 +1,5 @@
 {
-  "name": "semantic-blockquote",
+  "name": "remark-semantic-blockquotes",
   "version": "1.0.0",
   "type": "module",
   "license": "MIT",
