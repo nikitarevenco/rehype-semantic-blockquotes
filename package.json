@@ -1,8 +1,8 @@
 {
   "name": "remark-semantic-blockquotes",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "type": "module",
-  "license": "MIT",
+  "license": "ISC",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,9 +11,11 @@
   "remarkConfig": {},
   "keywords": [],
   "author": "Nikita Revenco",
-  "license": "ISC",
   "dependencies": {
+    "mdast-util-from-markdown": "^2.0.1",
+    "mdast-util-mdx": "^3.0.0",
     "mdast-util-to-markdown": "^2.1.0",
+    "micromark-extension-mdxjs": "^3.0.0",
     "remark": "^15.0.1",
     "remark-parse": "^11.0.0",
     "unist-util-visit": "^5.0.0"
