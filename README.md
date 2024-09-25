@@ -172,7 +172,7 @@ But this would:
 
 ## Security
 
-Use of `remark-videos` does not involve **[rehype][]** (**[hast][]**) or user
+Use of `remark-semantic-blockquotes` does not involve **[rehype][]** (**[hast][]**) or user
 content so there are no openings for [cross-site scripting (XSS)][wiki-xss]
 attacks.
 
