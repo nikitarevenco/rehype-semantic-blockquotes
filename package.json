@@ -1,5 +1,5 @@
 {
-  "name": "remark-semantic-blockquotes",
+  "name": "rehype-semantic-blockquotes",
   "version": "2.0.0",
   "type": "module",
   "license": "ISC",
@@ -12,12 +12,12 @@
   "keywords": [],
   "author": "Nikita Revenco",
   "dependencies": {
-    "mdast-util-from-markdown": "^2.0.1",
-    "mdast-util-mdx": "^3.0.0",
-    "mdast-util-to-markdown": "^2.1.0",
-    "micromark-extension-mdxjs": "^3.0.0",
-    "remark": "^15.0.1",
-    "remark-parse": "^11.0.0",
     "unist-util-visit": "^5.0.0"
-  }
+  },
+  "devDependencies": {
+    "rehype-stringify": "^10.0.0",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.1",
+    "unified": "^11.0.5"
+ }
 }
