@@ -1,6 +1,6 @@
-# remark-semantic-blockquotes
+# rehype-semantic-blockquotes
 
-A **[remark][]** plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.
+A **[rehype][]** plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.
 
 ## Contents
 
@@ -14,7 +14,7 @@ A **[remark][]** plugin to extend blockquote syntax to make it simple to mention
 
 ## What is this?
 
-This package is a [unified][] ([remark][]) plugin to extend blockquote syntax to allow simple citation/mention of source from which the quote originates conforming to semantic HTML standards
+This package is a [unified][] ([rehype][]) plugin to extend blockquote syntax to allow simple citation/mention of source from which the quote originates conforming to semantic HTML standards
 
 ## When should I use this?
 
@@ -55,7 +55,7 @@ But that feels wrong, because it would render in the following way:
     them.
   </p>
 </blockquote>
-<p>&mdash; Albert Einstein</p>
+<p>-- Albert Einstein</p>
 ```
 
 If we want to style them together we would have to wrap them within a parent element.
@@ -67,13 +67,13 @@ This plugin does just that.
 Then we can easily style the blockquote and the caption however we want to using CSS
 
 ```css
-[data-blockquote-figure] {
+[data-blockquote-container] {
   display: flex;
   flex-direction: column;
   flex-gap: 8px;
 }
-[data-blockquote-figcaption]::before {
-  content: "&mdash; ";
+[data-blockquote-credit]::before {
+  content: "- ";
 }
 ```
 
@@ -82,54 +82,63 @@ Then we can easily style the blockquote and the caption however we want to using
 This package is [ESM only][esm]. In Node.js (version 16+), install with [npm][]:
 
 ```
-npm install remark-semantic-blockquotes
+npm install rehype-semantic-blockquotes
 ```
 
 ## Use
 
-Say we have the following file `example.md`.
-
-```md
-> Better to admit you walked through the wrong door than spend your life in the wrong room.
->
-> @ [Josh Davis](https://somewhere.com)
-```
-
-...and a module `example.js`:
+Say we have the following file `example.js`:
 
 ```js
-import { remark } from "remark";
-import remarkSemanticBlockquotes from "remark-semantic-blockquotes";
-import { read } from "to-vfile";
+import rehypeFormat from "rehype-format";
+import rehypeSemanticBlockquotes from "rehype-semantic-blockquotes";
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
 
-const file = await remark()
-  .use(remarkSemanticBlockquotes)
-  .process(await read("example.md"));
+const doc = `
+> Better to admit you walked through the wrong door than spend your life in the wrong room.
+>
+> @ [Josh Davis](https://somewhere.com) <a href="https://somewhere.com"></a>
+`;
 
-console.log(String(file));
+const file = String(
+  await unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeSemanticBlockquotes)
+    .use(rehypeStringify)
+    .use(rehypeFormat) // for demonstration purposes only
+    .process(doc),
+);
+
+console.log(file);
 ```
 
 ...then running `node example.js` yields:
 
 ```html
-<figure data-blockquote-figure="">
+<figure data-blockquote-contaienr="">
   <blockquote data-blockquote-content="">
-    Better to admit you walked through the wrong door than spend your life in
-    the wrong room.
+    <p>
+      Better to admit you walked through the wrong door than spend your life in
+      the wrong room.
+    </p>
   </blockquote>
-  <figcaption data-blockquote-figcaption="">
-    [Josh Davis](https://somewhere.com)
+  <figcaption data-blockquote-credit="">
+    <p><a href="https://somewhere.com">Josh Davis</a></p>
   </figcaption>
 </figure>
 ```
 
 ## API
 
-This package exports no identifiers. The default export is [`remarkSemanticBlockquotes`][api-remark-videos].
+This package exports no identifiers. The default export is `rehypeSemanticBlockquotes`.
 
-#### `unified().use(remarkVideos)`
+#### `unified().use(rehypeSemanticBlockquotes)`
 
-Adds syntax `@` which places the contents in the `@` into the `<figcaption>` element
+Adds syntax `@ ` which places the contents in the `@ ` into the `<figcaption>` element
 
 ###### Parameters
 
@@ -137,9 +146,10 @@ The attributes (`data-blockquote-figure`, etc.) are fully customizable. The plug
 
 ```js
 {
-  figure: 'data-blockquote-figure=""',
-  blockquote: 'data-blockquote-content=""',
-  figcaption: 'data-blockquote-figcaption=""',
+    figure: "data-blockquote-contaienr",
+    blockquote: "data-blockquote-content",
+    figcaption: "data-blockquote-credit",
+    syntax: "@ ",
 };
 ```
 
@@ -149,7 +159,7 @@ Transform ([`Transformer`][unified-transformer]).
 
 #### Syntax Info
 
-In the MD blockquote, if the last line starts with an `@` and the line before is an empty line then the transformation will take place. Otherwise we will just get a regular `<blockquote>`, the plugin won't take effect.
+In the MD blockquote, if the last line starts with an `@ ` and the line before is an empty line then the transformation will take place. Otherwise we will just get a regular `<blockquote>`, the plugin won't take effect.
 
 For example these snippets will not be affected by the plugin:
 
@@ -172,7 +182,7 @@ But this would:
 
 ## Security
 
-Use of `remark-semantic-blockquotes` does not involve **[rehype][]** (**[hast][]**) or user
+Use of `rehype-semantic-blockquotes` does not involve **[rehype][]** (**[hast][]**) or user
 content so there are no openings for [cross-site scripting (XSS)][wiki-xss]
 attacks.
 
