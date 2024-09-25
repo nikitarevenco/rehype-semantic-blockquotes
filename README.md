@@ -103,7 +103,7 @@ import remarkSemanticBlockquotes from "remark-semantic-blockquotes";
 import { read } from "to-vfile";
 
 const file = await remark()
-  .use(remarkVideos)
+  .use(remarkSemanticBlockquotes)
   .process(await read("example.md"));
 
 console.log(String(file));
