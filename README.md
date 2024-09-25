@@ -103,7 +103,7 @@ import remarkSemanticBlockquotes from "remark-semantic-blockquotes";
 import { read } from "to-vfile";
 
 const file = await remark()
-  .use(remarkVideos)
+  .use(remarkSemanticBlockquotes)
   .process(await read("example.md"));
 
 console.log(String(file));
@@ -172,7 +172,7 @@ But this would:
 
 ## Security
 
-Use of `remark-videos` does not involve **[rehype][]** (**[hast][]**) or user
+Use of `remark-semantic-blockquotes` does not involve **[rehype][]** (**[hast][]**) or user
 content so there are no openings for [cross-site scripting (XSS)][wiki-xss]
 attacks.
 
