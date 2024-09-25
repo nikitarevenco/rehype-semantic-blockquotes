@@ -2,7 +2,26 @@
   "name": "rehype-semantic-blockquotes",
   "version": "2.0.0",
   "type": "module",
-  "license": "ISC",
+  "license": "MIT",
+  "description": "A remark plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.",
+  "funding": {
+    "type": "opencollective",
+    "url": "https://opencollective.com/unified"
+  },
+  "keywords": [
+    "definition",
+    "destination",
+    "extract",
+    "image",
+    "link",
+    "markdown",
+    "mdast",
+    "plugin",
+    "reference",
+    "remark",
+    "remark-plugin",
+    "unified"
+  ],
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +29,9 @@
   },
   "remarkConfig": {},
   "keywords": [],
-  "author": "Nikita Revenco",
+  "author": "Nikita Revenco <hi@nikitarevenco.com> (https://github.com/nikitarevenco/)",
+  "homepage": "https://github.com/nikitarevenco/rehype-semantic-blockquotes",
+  "bugs": "https://github.com/nikitarevenco/rehype-semantic-blockquotes/issues",
   "dependencies": {
     "unist-util-visit": "^5.0.0"
   },
