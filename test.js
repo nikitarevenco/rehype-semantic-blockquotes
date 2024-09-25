@@ -2,7 +2,7 @@ import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
-import remarkSemanticBlockquote from "./index.js";
+import rehypeSemanticBlockquotes from "./index.js";
 
 import test from "node:test";
 import assert from "node:assert";
@@ -90,7 +90,7 @@ tests.forEach(async ([message, input, expected]) => {
     await unified()
       .use(remarkParse)
       .use(remarkRehype)
-      .use(remarkSemanticBlockquote)
+      .use(rehypeSemanticBlockquotes)
       .use(rehypeStringify)
       .process(input),
   );

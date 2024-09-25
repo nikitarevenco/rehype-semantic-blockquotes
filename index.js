@@ -1,12 +1,8 @@
 import { visit } from "unist-util-visit";
 
-/**
- * Extends markdown syntax of blockquotes, making them more semantic by using figure and figcaption elements when giving credit
- * @param {{ figure: string, blockquote: string, figcaption: string }} opts Change the default attributes passed to the <figure>, <blockquote> and <figcaption> elements
- */
-export default function remarkSemanticBlockquotes(
+export default function rehypeSemanticBlockquotes(
   opts = {
-    figure: "data-blockquote-figure",
+    figure: "data-blockquote-contaienr",
     blockquote: "data-blockquote-content",
     figcaption: "data-blockquote-credit",
     syntax: "@ ",
