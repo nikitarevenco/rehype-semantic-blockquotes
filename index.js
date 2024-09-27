@@ -1,5 +1,16 @@
 import { visit } from "unist-util-visit";
 
+/**
+ * A rehype plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.
+ * More info: [https://github.com/nikitarevenco/remark-semantic-blockquotes](https://github.com/nikitarevenco/remark-semantic-blockquotes)
+ *
+ * @param {Object} opts Configuration for the plugin
+ * @param {string} opts.figure Attribute name for the `<figure>` element
+ * @param {string} opts.blockquote Attribute name for the `<blockquote>` element
+ * @param {string} opts.figcaption Attribute name for the `<figcaption>` element
+ * @param {string} opts.syntax Syntax to use to trigger the plugin's effect
+ * @returns {import("hast").Root} The transformed HAST root node
+ */
 export default function rehypeSemanticBlockquotes(
   opts = {
     figure: "data-blockquote-container",
@@ -50,30 +61,30 @@ export default function rehypeSemanticBlockquotes(
           [name]: "figure",
           [attributes]: isMdx
             ? [
-                {
-                  type: "mdxJsxAttribute",
-                  name: opts.figure,
-                  value: "",
-                },
-              ]
-            : {
-                [opts.figure]: "",
+              {
+                type: "mdxJsxAttribute",
+                name: opts.figure,
+                value: "",
               },
+            ]
+            : {
+              [opts.figure]: "",
+            },
           children: [
             {
               type,
               [name]: "blockquote",
               [attributes]: isMdx
                 ? [
-                    {
-                      type: "mdxJsxAttribute",
-                      name: opts.blockquote,
-                      value: "",
-                    },
-                  ]
-                : {
-                    [opts.blockquote]: "",
+                  {
+                    type: "mdxJsxAttribute",
+                    name: opts.blockquote,
+                    value: "",
                   },
+                ]
+                : {
+                  [opts.blockquote]: "",
+                },
               children: content,
             },
             {
@@ -81,15 +92,15 @@ export default function rehypeSemanticBlockquotes(
               [name]: "figcaption",
               [attributes]: isMdx
                 ? [
-                    {
-                      type: "mdxJsxAttribute",
-                      name: opts.figcaption,
-                      value: "",
-                    },
-                  ]
-                : {
-                    [opts.figcaption]: "",
+                  {
+                    type: "mdxJsxAttribute",
+                    name: opts.figcaption,
+                    value: "",
                   },
+                ]
+                : {
+                  [opts.figcaption]: "",
+                },
               children: [credit],
             },
           ],
