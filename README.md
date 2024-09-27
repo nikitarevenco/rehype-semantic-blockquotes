@@ -120,10 +120,22 @@ export const mdxComponents: MDXComponents = {
 
 ## Install
 
-This package is [ESM only][esm]. In Node.js (version 16+), install with [npm][]:
+Install with your package manager:
 
 ```
 npm install rehype-semantic-blockquotes
+```
+
+```
+pnpm add rehype-semantic-blockquotes
+```
+
+```
+bun add rehype-semantic-blockquotes
+```
+
+```
+deno add rehype-semantic-blockquotes
 ```
 
 ## Use
