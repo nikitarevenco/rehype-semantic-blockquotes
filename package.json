@@ -1,6 +1,6 @@
 {
   "name": "rehype-semantic-blockquotes",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "type": "module",
   "license": "MIT",
   "description": "",
@@ -12,7 +12,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "build": "tsc"
+    "prepack": "tsc"
   },
   "remarkConfig": {},
   "author": "Nikita Revenco <hi@nikitarevenco.com> (https://github.com/nikitarevenco/)",
