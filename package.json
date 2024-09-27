@@ -12,7 +12,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test.js",
-    "prepack": "tsc"
+    "prepare": "tsc"
   },
   "remarkConfig": {},
   "author": "Nikita Revenco <hi@nikitarevenco.com> (https://github.com/nikitarevenco/)",
