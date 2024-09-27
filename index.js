@@ -2,7 +2,7 @@ import { visit } from "unist-util-visit";
 
 export default function rehypeSemanticBlockquotes(
   opts = {
-    figure: "data-blockquote-contaienr",
+    figure: "data-blockquote-container",
     blockquote: "data-blockquote-content",
     figcaption: "data-blockquote-credit",
     syntax: "@ ",
