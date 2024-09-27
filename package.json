@@ -3,7 +3,7 @@
   "version": "3.0.4",
   "type": "module",
   "license": "MIT",
-  "description": "",
+  "description": "A rehype plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way",
   "funding": {
     "type": "opencollective",
     "url": "https://opencollective.com/unified"
