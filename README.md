@@ -64,6 +64,30 @@ But there is a different approach, using the `<figure>` element we can create a 
 
 This plugin does just that.
 
+For instance, by turning the following syntax:
+
+```md
+> We cannot solve our problems with the same thinking we used when we created them.
+>
+> @ Albert Einstein
+```
+
+Into this:
+
+```html
+<figure data-blockquote-container="">
+  <blockquote data-blockquote-content="">
+    <p>
+      We cannot solve our problems with the same thinking we used when we created
+    them.
+    </p>
+  </blockquote>
+  <figcaption data-blockquote-credit="">
+    <p>Albert Einstein</p>
+  </figcaption>
+</figure>
+```
+
 Then we can easily style the blockquote and the caption however we want to using CSS
 
 ```css
@@ -119,7 +143,7 @@ console.log(file);
 ...then running `node example.js` yields:
 
 ```html
-<figure data-blockquote-contaienr="">
+<figure data-blockquote-container="">
   <blockquote data-blockquote-content="">
     <p>
       Better to admit you walked through the wrong door than spend your life in
