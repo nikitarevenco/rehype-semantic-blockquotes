@@ -27,7 +27,8 @@ In markdown we can create blockquotes such as:
 ```
 
 But often times, it may be desireable to include a reference to the person that mentioned that quote.
-We could use the `<cite>` element:
+
+We might think to use the `<cite>` element:
 
 ```md
 > We cannot solve our problems with the same thinking we used when we created them.
