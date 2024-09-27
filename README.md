@@ -101,6 +101,22 @@ Then we can easily style the blockquote and the caption however we want to using
 }
 ```
 
+Or even replace with our own custom component (e.g. if we were using MDX)
+
+```jsx
+export const mdxComponents: MDXComponents = {
+  figure: ({ children, ...rest }) => {
+    if (rest["data-blockquote-container"] === "") {
+      // OK, we are only targeting the semantic blockquote
+      return <MyAwesomeComponent />
+    }
+    
+    // do nothing to non semantic-blockquotes
+    return (<figure {...rest}>{children}</figure>)
+  }
+};
+```
+
 ## Install
 
 This package is [ESM only][esm]. In Node.js (version 16+), install with [npm][]:
