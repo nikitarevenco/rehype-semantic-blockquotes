@@ -10,7 +10,7 @@ import assert from "node:assert";
 const tests = [
   [
     "Will do nothing if there is no linebreak between the credit and the content",
-    `> Bettel to admit you walked through the wrong door than spend your life in the wrong room.
+    `> Better to admit you walked through the wrong door than spend your life in the wrong room.
 > @ Josh Davis
 `,
     `<blockquote>
