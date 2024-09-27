@@ -112,7 +112,7 @@ export const mdxComponents: MDXComponents = {
     }
     
     // do nothing to non semantic-blockquotes
-    return (<figure {...rest}>{children}</figure>)
+    return <figure {...rest}>{children}</figure>
   }
 };
 ```
