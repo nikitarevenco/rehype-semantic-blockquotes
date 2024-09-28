@@ -13,7 +13,7 @@ const rehypeSemanticBlockquotes = (
     /**
      * Attribute name for the `<figure>` element
      */
-    figure: "data-blockquote-contaienr",
+    figure: "data-blockquote-container",
     /**
      * Attribute name for the `<blockquote>` element
      */

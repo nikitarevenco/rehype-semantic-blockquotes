@@ -27,7 +27,8 @@ In markdown we can create blockquotes such as:
 ```
 
 But often times, it may be desireable to include a reference to the person that mentioned that quote.
-We could use the `<cite>` element:
+
+We might think to use the `<cite>` element:
 
 ```md
 > We cannot solve our problems with the same thinking we used when we created them.
@@ -64,6 +65,30 @@ But there is a different approach, using the `<figure>` element we can create a 
 
 This plugin does just that.
 
+For instance, by turning the following syntax:
+
+```md
+> We cannot solve our problems with the same thinking we used when we created them.
+>
+> @ Albert Einstein
+```
+
+Into this:
+
+```html
+<figure data-blockquote-container="">
+  <blockquote data-blockquote-content="">
+    <p>
+      We cannot solve our problems with the same thinking we used when we created
+    them.
+    </p>
+  </blockquote>
+  <figcaption data-blockquote-credit="">
+    <p>Albert Einstein</p>
+  </figcaption>
+</figure>
+```
+
 Then we can easily style the blockquote and the caption however we want to using CSS
 
 ```css
@@ -77,12 +102,40 @@ Then we can easily style the blockquote and the caption however we want to using
 }
 ```
 
+Or even replace with our own custom component (e.g. if we were using MDX)
+
+```jsx
+export const mdxComponents: MDXComponents = {
+  figure: ({ children, ...rest }) => {
+    if (rest["data-blockquote-container"] === "") {
+      // OK, we are only targeting the semantic blockquote
+      return <MyAwesomeComponent />
+    }
+    
+    // do nothing to non semantic-blockquotes
+    return <figure {...rest}>{children}</figure>
+  }
+};
+```
+
 ## Install
 
-This package is [ESM only][esm]. In Node.js (version 16+), install with [npm][]:
+Install with your package manager:
 
 ```
 npm install rehype-semantic-blockquotes
+```
+
+```
+pnpm add rehype-semantic-blockquotes
+```
+
+```
+bun add rehype-semantic-blockquotes
+```
+
+```
+deno add rehype-semantic-blockquotes
 ```
 
 ## Use
@@ -119,7 +172,7 @@ console.log(file);
 ...then running `node example.js` yields:
 
 ```html
-<figure data-blockquote-contaienr="">
+<figure data-blockquote-container="">
   <blockquote data-blockquote-content="">
     <p>
       Better to admit you walked through the wrong door than spend your life in
