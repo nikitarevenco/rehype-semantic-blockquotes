@@ -1,9 +1,8 @@
 {
-  "include": ["index.js"],
+  "include": ["index.ts"],
   "compilerOptions": {
-    "allowJs": true,
+    "strict": true,
     "declaration": true,
-    "emitDeclarationOnly": true,
     "declarationMap": true
   }
 }
