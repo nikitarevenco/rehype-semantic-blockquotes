@@ -48,8 +48,6 @@ const rehypeSemanticBlockquotes = (
         return 
       }
 
-      // Depends what you want with `> *@* this`, `> @ *this*`, `> *@ this*`.
-      // Tail must be a `p`.
       const tailText = tail.children[0]
 
       if (tailText.type !== 'text' || !tailText.value.startsWith(opts.syntax)) {
