@@ -11,6 +11,9 @@ importers:
       '@types/hast':
         specifier: ^3.0.4
         version: 3.0.4
+      hast-util-whitespace:
+        specifier: ^3.0.0
+        version: 3.0.0
       unist-util-visit:
         specifier: ^5.0.0
         version: 5.0.0

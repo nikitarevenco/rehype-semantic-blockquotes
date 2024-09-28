@@ -20,6 +20,7 @@
   "bugs": "https://github.com/nikitarevenco/rehype-semantic-blockquotes/issues",
   "dependencies": {
     "@types/hast": "^3.0.4",
+    "hast-util-whitespace": "^3.0.0",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {

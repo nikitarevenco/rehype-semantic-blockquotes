@@ -1,5 +1,6 @@
 import { visit } from "unist-util-visit";
-import { type Root } from "hast";
+import { whitespace } from 'hast-util-whitespace'
+import type { Root } from "hast";
 
 /**
  * A rehype plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.
@@ -29,101 +30,61 @@ const rehypeSemanticBlockquotes = (
   }
 ) => {
   return (tree: Root) => {
-    /** @ts-ignore */
-    const isMdx = tree.children?.[0]?.type === "mdxjsEsm";
 
-    visit(tree, "element", (blockquote, index, parent) => {
-      if (!parent || !index) {
+    visit(tree, 'element', (blockquote, index, parent) => {
+      if (!parent || index === undefined || blockquote.tagName !== "blockquote") {
         return;
       }
 
-      if (blockquote.tagName === "blockquote") {
-        // If there are 4 or less children, then do nothing, because we require a minimum of 2 elements to proceed
-        // e.g. with 2 elements `blockquote` would have this structure: [\n, ${element1}, \n, ${element2}, \n]
-        if (blockquote.children.length <= 4) {
-          return;
-        }
+      let tailIndex = blockquote.children.length - 1
 
-        // the last child will always be a newline, so take the one before
-        /** @ts-ignore */
-        const credit = blockquote.children.at(-2);
-
-        /**
-         * The candidate node that we check for starting with the correct syntax
-         */
-        const textNodeWithSyntax = credit.children.at(0);
-
-        const startsWithCorrectSyntax = textNodeWithSyntax.value.startsWith(
-          opts.syntax,
-        );
-
-        if (!startsWithCorrectSyntax) {
-          return;
-        }
-
-        textNodeWithSyntax.value = textNodeWithSyntax.value.slice(
-          opts.syntax.length,
-        );
-
-        const content = blockquote.children.slice(0, -2);
-
-        const type = isMdx ? "mdxJsxFlowElement" : "element";
-        const name = isMdx ? "name" : "tagName";
-        const attributes = isMdx ? "attributes" : "properties";
-
-        const ast = {
-          type,
-          [name]: "figure",
-          [attributes]: isMdx
-            ? [
-              {
-                type: "mdxJsxAttribute",
-                name: opts.figure,
-                value: "",
-              },
-            ]
-            : {
-              [opts.figure]: "",
-            },
-          children: [
-            {
-              type,
-              [name]: "blockquote",
-              [attributes]: isMdx
-                ? [
-                  {
-                    type: "mdxJsxAttribute",
-                    name: opts.blockquote,
-                    value: "",
-                  },
-                ]
-                : {
-                  [opts.blockquote]: "",
-                },
-              children: content,
-            },
-            {
-              type,
-              [name]: "figcaption",
-              [attributes]: isMdx
-                ? [
-                  {
-                    type: "mdxJsxAttribute",
-                    name: opts.figcaption,
-                    value: "",
-                  },
-                ]
-                : {
-                  [opts.figcaption]: "",
-                },
-              children: [credit],
-            },
-          ],
-        };
-
-        parent.children[index] = ast;
+      while (tailIndex > -1 && whitespace(blockquote.children[tailIndex])) {
+        tailIndex--
       }
-    });
+
+      const tail = blockquote.children[tailIndex]
+
+      if (!tail || tail.type !== 'element' || tail.tagName !== 'p') { 
+        return 
+      }
+
+      // Depends what you want with `> *@* this`, `> @ *this*`, `> *@ this*`.
+      // Tail must be a `p`.
+      const tailText = tail.children[0]
+
+      if (tailText.type !== 'text' || !tailText.value.startsWith(opts.syntax)) {
+        return
+      }
+
+      tailText.value = tailText.value.slice(opts.syntax.length)
+
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'figure',
+        properties: { [opts.figure]: '' },
+        children: [
+          {
+            type: 'element',
+            tagName: 'blockquote',
+            properties: { [opts.blockquote]: '' },
+            children: blockquote.children.slice(0, tailIndex)
+          },
+          {
+            type: 'element',
+            tagName: 'figcaption',
+            properties: { [opts.figcaption]: '' },
+            children: [
+              {
+                type: 'element',
+                tagName: 'p',
+                properties: {},
+                children: tail.children
+              }
+            ]
+          }
+        ]
+      }
+    })
   };
 }
 
