@@ -1,8 +1,8 @@
 # rehype-semantic-blockquotes
 
-![test ci badge](https://github.com/nikitarevenco/rehype-semantic-blockquotes/actions/workflows/tests.yml/badge.svg)
-
 A **[rehype][]** plugin to extend blockquote syntax to make it simple to mention/cite sources in a semantically correct way.
+
+![test ci badge](https://github.com/nikitarevenco/rehype-semantic-blockquotes/actions/workflows/tests.yml/badge.svg)
 
 ## Contents
 
