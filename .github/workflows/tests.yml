@@ -22,4 +22,4 @@ jobs:
         version: 9
         run_install: true
 
-      run: pnpm test
+    - run: pnpm test
