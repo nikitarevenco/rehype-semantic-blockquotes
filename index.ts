@@ -14,15 +14,15 @@ const rehypeSemanticBlockquotes = (
     /**
      * Attribute name for the `<figure>` element
      */
-    figure: "data-blockquote-container",
+    figure: "dataBlockquoteContainer",
     /**
      * Attribute name for the `<blockquote>` element
      */
-    blockquote: "data-blockquote-content",
+    blockquote: "dataBlockquoteContent",
     /**
      * Attribute name for the `<figcaption>` element
      */
-    figcaption: "data-blockquote-credit",
+    figcaption: "dataBlockquoteCredit",
     /**
      * Syntax to use to trigger the plugin's effect
      */
