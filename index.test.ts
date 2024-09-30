@@ -1,15 +1,16 @@
 import rehypeStringify from "rehype-stringify";
 import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
+import rehypeParse from "rehype-parse";
 import { unified } from "unified";
 import rehypeSemanticBlockquotes from "./index.ts";
 
 import test from "node:test";
 import assert from "node:assert";
 
-const tests = [
+const markdownTests = [
   [
-    "Will do nothing if there is no linebreak between the credit and the content",
+    "Do nothing if there is no linebreak between the credit and the content",
     `> Better to admit you walked through the wrong door than spend your life in the wrong room.
 > @ Josh Davis
 `,
@@ -19,7 +20,7 @@ const tests = [
 </blockquote>`,
   ],
   [
-    "Will not transform markdown link",
+    "Does not transform markdown link",
     `> Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
 > @ [Josh Davis](https://somewhere.com)
@@ -29,7 +30,7 @@ const tests = [
 </blockquote><figcaption data-blockquote-credit=""><p><a href="https://somewhere.com">Josh Davis</a></p></figcaption></figure>`,
   ],
   [
-    "Will not transform complicated markdown syntax with reveral nodes",
+    "Does not transform complicated markdown syntax with reveral nodes",
     `
 > Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
@@ -40,7 +41,7 @@ const tests = [
 </blockquote><figcaption data-blockquote-credit=""><p>Credit: <a href="https://www.somewhere.com">Josh Davis</a>, we obtained the quote at <strong>some website</strong></p></figcaption></figure>`,
   ],
   [
-    "Will transform a multi-line blockquote with a caption",
+    "Transforms a multi-line blockquote with a caption",
     `
 > Better to admit you walked through the wrong door
 > than spend your life in the wrong room.
@@ -53,7 +54,7 @@ than spend your life in the wrong room.</p>
 </blockquote><figcaption data-blockquote-credit=""><p>Josh Davis</p></figcaption></figure>`,
   ],
   [
-    "Will transform a blockquote with a nested list in the content",
+    "Transforms a blockquote with a nested list in the content",
     `
 > Here are some steps:
 >
@@ -73,7 +74,7 @@ than spend your life in the wrong room.</p>
 </blockquote><figcaption data-blockquote-credit=""><p>Jane Doe</p></figcaption></figure>`,
   ],
   [
-    "Will transform a blockquote with inline code in the content",
+    "Transforms a blockquote with inline code in the content",
     `
 > Use the \`console.log()\` function to debug your code.
 >
@@ -85,7 +86,40 @@ than spend your life in the wrong room.</p>
   ],
 ];
 
-tests.forEach(async ([message, input, expected]) => {
+const htmlTests = [
+  [
+    "Transforms a simple HTML blockquote with credit",
+    `<blockquote><p>Simple quote.</p><p>@ Author Name</p></blockquote>`,
+    `<html><head></head><body><figure data-blockquote-container=""><blockquote data-blockquote-content=""><p>Simple quote.</p></blockquote><figcaption data-blockquote-credit=""><p>Author Name</p></figcaption></figure></body></html>`
+  ],
+  [
+    "Handles minified HTML",
+    `<blockquote><p>Minified quote.</p><p>@ Author</p></blockquote>`,
+    `<html><head></head><body><figure data-blockquote-container=""><blockquote data-blockquote-content=""><p>Minified quote.</p></blockquote><figcaption data-blockquote-credit=""><p>Author</p></figcaption></figure></body></html>`
+  ],
+  [
+    "Handles nested elements in blockquote",
+    `<blockquote><p>Quote with <em>emphasis</em> and <strong>strong</strong>.</p><p>@ Author</p></blockquote>`,
+    `<html><head></head><body><figure data-blockquote-container=""><blockquote data-blockquote-content=""><p>Quote with <em>emphasis</em> and <strong>strong</strong>.</p></blockquote><figcaption data-blockquote-credit=""><p>Author</p></figcaption></figure></body></html>`
+  ],
+  [
+    "Does not transform when credit syntax is not at the end",
+    `<blockquote><p>@ Not at the end.</p><p>This should not transform.</p></blockquote>`,
+    `<html><head></head><body><blockquote><p>@ Not at the end.</p><p>This should not transform.</p></blockquote></body></html>`
+  ],
+  [
+    "Handles multiple paragraphs in blockquote",
+    `<blockquote><p>First paragraph.</p><p>Second paragraph.</p><p>@ Author</p></blockquote>`,
+    `<html><head></head><body><figure data-blockquote-container=""><blockquote data-blockquote-content=""><p>First paragraph.</p><p>Second paragraph.</p></blockquote><figcaption data-blockquote-credit=""><p>Author</p></figcaption></figure></body></html>`
+  ],
+  [
+    "Preserves whitespace in credit",
+    `<blockquote><p>Quote.</p><p>@   Author with spaces   </p></blockquote>`,
+    `<html><head></head><body><figure data-blockquote-container=""><blockquote data-blockquote-content=""><p>Quote.</p></blockquote><figcaption data-blockquote-credit=""><p>  Author with spaces   </p></figcaption></figure></body></html>`
+  ]
+];
+
+markdownTests.forEach(async ([message, input, expected]) => {
   const actual = String(
     await unified()
       .use(remarkParse)
@@ -95,7 +129,21 @@ tests.forEach(async ([message, input, expected]) => {
       .process(input),
   );
 
-  test(message, () => {
+  test(`MD -> HTML: ${message}`, () => {
+    assert.strictEqual(actual, expected);
+  });
+});
+
+htmlTests.forEach(async ([message, input, expected]) => {
+  const actual = String(
+    await unified()
+      .use(rehypeParse)
+      .use(rehypeSemanticBlockquotes)
+      .use(rehypeStringify)
+      .process(input)
+  );
+
+  test(`HTML: ${message}`, () => {
     assert.strictEqual(actual, expected);
   });
 });
