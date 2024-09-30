@@ -233,12 +233,24 @@ For example these snippets will not be affected by the plugin:
 > @ Albert Einstein
 ```
 
-But this would:
+```md
+> We cannot solve our problems with the same thinking we used when we created them.
+>
+> **@ Albert Einstein**
+```
+
+But these would:
 
 ```md
 > We cannot solve our problems with the same thinking we used when we created them.
 >
 > @ Albert Einstein
+```
+
+```md
+> We cannot solve our problems with the same thinking we used when we created them.
+>
+> @ **Albert Einstein**
 ```
 
 ## License
