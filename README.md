@@ -152,23 +152,23 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
-const doc = `
+const markdown = `
 > Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
 > @ [Josh Davis](https://somewhere.com) <a href="https://somewhere.com"></a>
 `;
 
-const file = String(
+const html = String(
   await unified()
     .use(remarkParse)
     .use(remarkRehype)
     .use(rehypeSemanticBlockquotes)
     .use(rehypeStringify)
     .use(rehypeFormat) // for demonstration purposes only
-    .process(doc),
+    .process(markdown),
 );
 
-console.log(file);
+console.log(html);
 ```
 
 ...then running `node example.js` yields:
