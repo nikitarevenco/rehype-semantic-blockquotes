@@ -210,6 +210,7 @@ The attributes (`data-blockquote-figure`, etc.) are fully customizable. The plug
 
 > [!NOTE]
 > Even though we use camelCase here, it will output as kebab-case
+>
 > See: https://github.com/syntax-tree/hast#propertyname
 
 
