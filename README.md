@@ -201,9 +201,9 @@ The attributes (`data-blockquote-figure`, etc.) are fully customizable. The plug
 
 ```js
 {
-    figure: "dataBlockquoteContaienr",
-    blockquote: "dataBlockquoteContent",
-    figcaption: "dataBlockquoteCredit",
+    figure: "dataBlockquoteContaienr", // HTML attribute: data-blockquote-container
+    blockquote: "dataBlockquoteContent", // HTML attribute: data-blockquote-content
+    figcaption: "dataBlockquoteCredit", // HTML attribute: data-blockquote-credit
     syntax: "@ ",
 };
 ```
