@@ -155,17 +155,17 @@ import { unified } from "unified";
 const markdown = `
 > Better to admit you walked through the wrong door than spend your life in the wrong room.
 >
-> @ [Josh Davis](https://somewhere.com) <a href="https://somewhere.com"></a>
+> @ [Josh Davis](https://somewhere.com)
 `;
 
 const html = String(
   await unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeSemanticBlockquotes)
-    .use(rehypeStringify)
-    .use(rehypeFormat) // for demonstration purposes only
-    .process(markdown),
+    .use(remarkParse) // parse markdown
+    .use(remarkRehype) // convert markdown syntax tree into HTML syntax tree
+    .use(rehypeSemanticBlockquotes) // apply the plugin
+    .use(rehypeStringify) // convert HTML syntax tree into HTML
+    .use(rehypeFormat) // format HTML by adding insignificant whitespace
+    .process(markdown)
 );
 
 console.log(html);
